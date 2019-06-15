@@ -20,6 +20,8 @@
 let turn = 1;               //ターンを表すフラグ 1:先攻 2:後攻
 let move_flg = 0;           //コマの移動中かどうかを表すフラグ
 var move_point_id = "";     //移動元のID
+var blue_stock = 6;
+var white_stock = 6;
 
 $(function(){
   $('table td').click(function(){
@@ -33,7 +35,11 @@ $(function(){
           move_point_id = '#' + $(this).attr('id');   //移動元IDを記録
           console.log(move_point_id); 
         }else if($(this).text() == ''){
-          $(this).text('●');
+          if(blue_stock > 0){
+            $(this).text('●');
+            --blue_stock;
+            stock_calc(blue_stock);  
+          }
         }  
       //コマの移動中
       }else if(move_flg == 1){
@@ -56,7 +62,11 @@ $(function(){
           move_point_id = '#' + $(this).attr('id');   //移動元IDを記録
           console.log(move_point_id); 
         }else if($(this).text() == ''){
-          $(this).text('○');
+          if(white_stock > 0){
+            $(this).text('○');
+            --white_stock;
+            stock_calc(white_stock);  
+          }
         }  
       //コマの移動中
       }else if(move_flg == 1){
@@ -82,6 +92,27 @@ $(function(){
       $('#current-turn').text('白のターン');
     }
   });
+
+  //ストック計算
+  function stock_calc(stock){
+    console.log(stock);
+    var disp_stock = "";
+
+    for(var i=0; i < stock; i++){
+      if(turn == 1){
+        disp_stock += "●";
+      }else{
+        disp_stock += "○";
+      }
+    }
+    console.log(disp_stock);
+    if(turn == 1){
+      $('#blue-piece').text(disp_stock);
+    }else{
+      $('#white-piece').text(disp_stock);
+    }
+    
+  }
 });
 
 
