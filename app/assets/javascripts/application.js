@@ -19,7 +19,11 @@
 
 $(function(){
   $('table td').click(function(){
-    $(this).text('○');
+    if($(this).text() == "○"){
+      $(this).text(' ');      
+    }else{
+      $(this).text('○');
+    }
   });
 });
 
