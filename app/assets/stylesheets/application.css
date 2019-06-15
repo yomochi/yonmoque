@@ -26,3 +26,27 @@ table td {
   height: 40px;
   text-align: center;
 }
+
+#cell-1b, #cell-1d, 
+#cell-2a, #cell-2c, #cell-2e,
+#cell-3b, #cell-3d,
+#cell-4a, #cell-4c, #cell-4e,
+#cell-5b, #cell-5d {
+  background-color: #eeeeee;
+}
+
+#cell-1c,
+#cell-2b, #cell-2d,
+#cell-3a, #cell-3e,
+#cell-4b, #cell-4d,
+#cell-5c {
+  background-color: #2d4eb2;
+}
+
+#cell-1a, #cell-1e,
+#cell-3c,
+#cell-5a, #cell-5e {
+  background-color: #919191;
+}
+
+
