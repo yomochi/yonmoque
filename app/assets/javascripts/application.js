@@ -21,10 +21,18 @@ let turn = 1;
 
 $(function(){
   $('table td').click(function(){
-    if($(this).text() == "○"){
-      $(this).text(' ');      
+    if(turn == 1){
+      if($(this).text() == "●"){
+        $(this).text(' ');      
+      }else{
+        $(this).text('●');
+      }  
     }else{
-      $(this).text('○');
+      if($(this).text() == "○"){
+        $(this).text(' ');      
+      }else{
+        $(this).text('○');
+      }  
     }
   });
 
