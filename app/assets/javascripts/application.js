@@ -17,12 +17,24 @@
 //= require jquery_ujs
 //= require_tree .
 
+let turn = 1;
+
 $(function(){
   $('table td').click(function(){
     if($(this).text() == "○"){
       $(this).text(' ');      
     }else{
       $(this).text('○');
+    }
+  });
+
+  $('#turn-end').click(function(){
+    turn = 3 - turn;
+
+    if(turn == 1){
+      $("#current-turn").text('青のターン');
+    }else{
+      $("#current-turn").text('白のターン');
     }
   });
 });
