@@ -61,7 +61,7 @@ table td {
   background-color: #919191;
 }
 
-#current-turn, #turn-end {
+#current-turn, #turn-end, #msg {
   font-size: 200%;
 }
 
