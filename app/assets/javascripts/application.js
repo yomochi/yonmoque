@@ -27,20 +27,21 @@ var col = 0;                //クリックしたテーブルの横座標X
 var row_bk = 0;
 var col_bk = 0;
 var ban = [                 //盤面の状態
-  [0,3,6,3,0],
-  [3,6,3,6,3],
-  [6,3,0,3,6],
-  [3,6,3,6,3],
-  [0,3,6,3,0],
+  [9,9,9,9,9,9,9],
+  [9,0,3,6,3,0,9],
+  [9,3,6,3,6,3,9],
+  [9,6,3,0,3,6,9],
+  [9,3,6,3,6,3,9],
+  [9,0,3,6,3,0,9],
+  [9,9,9,9,9,9,9]
 ];
 
 $(function(){
   $('table td').click(function(){
     //クリックされた場所を記録する
-    row = $(this).closest('tr').index() - 1;    //縦
-    col = this.cellIndex - 1;                   //横
+    row = $(this).closest('tr').index();    //縦
+    col = this.cellIndex;                   //横
     console.log('Row: ' + row + ', Column: ' + col);
-    dispBan();
 
     //先攻のターン
     if(turn == 1){
@@ -64,7 +65,7 @@ $(function(){
       }else if(move_flg == 1){
         if($(this).text() == '★'){
           $(this).text('●');
-          putban();
+          putBan();
           move_flg = 0;
         }else if($(this).text() == ''){
           if(judg_move()){
@@ -72,6 +73,7 @@ $(function(){
             $(move_point_id).text('');
             move_flg = 0;
             putBan();
+            reverse();
             $('#msg').text('');
           }else{
             $('#msg').text('そこには置けません！！');
@@ -110,6 +112,7 @@ $(function(){
             $(move_point_id).text('');
             move_flg = 0;
             putBan();
+            reverse();
             $('#msg').text('');
           }else{
             $('#msg').text('そこには置けません！！');
@@ -119,6 +122,7 @@ $(function(){
         }
       } 
     }
+    dispBan();
   });
 
   //ターン終了ボタンのクリックイベント
@@ -220,13 +224,57 @@ $(function(){
     return false;
   }
 
+  //コマの裏返し処理
+  function reverse(){
+    var ry,rx,dy,dx;
+    //dispBan();
+    //debugger;
+
+
+    for(dy = -1; dy <= 1; dy++){
+      for(dx = -1; dx <= 1; dx++){
+        if(!(dy == 0 && dx == 0) && ban[row][col] != ban[row + dy][col + dx]){
+          ry = row;
+          rx = col;
+          while(ry >=1 && ry <= 5 && rx >= 1 && rx <= 5 && ban[ry][rx] != 0 && ban[ry][rx] != 3 && ban[ry][rx] != 6){
+            ry += dy;
+            rx += dx;
+            //debugger;
+            //同じ色のコマか？
+            if(Math.abs(ban[row][col] - ban[ry][rx]) == 0 || Math.abs(ban[row][col] - ban[ry][rx]) == 3 || Math.abs(ban[row][col] - ban[ry][rx]) == 6){
+              ry -= dy;
+              rx -= dx;
+
+              while(!(ry == row && rx == col)){
+                //debugger;
+                if(ban[ry][rx] == 1 || ban[ry][rx] == 4 || ban[ry][rx] == 7){
+                  //debugger;
+                  $('#cell-' + ry + '' + rx).text('○');
+                  ban[ry][rx] += 1;
+                }else if(ban[ry][rx] == 2 || ban[ry][rx] == 5 || ban[ry][rx] == 8){
+                  //debugger;
+                  $('#cell-' + ry + '' + rx).text('●');
+                  ban[ry][rx] -= 1;
+                }
+                ry -= dy;
+                rx -= dx;
+              }
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
   //盤の状態を表示する
   function dispBan(){
-    console.log(ban[0]);
+    //console.log(ban[0]);
     console.log(ban[1]);
     console.log(ban[2]);
     console.log(ban[3]);
     console.log(ban[4]);
+    console.log(ban[5]);
+    //console.log(ban[6]);
   }
 });
 

@@ -39,25 +39,25 @@ table td {
   font-size: 150%;
 }
 
-#cell-1b, #cell-1d, 
-#cell-2a, #cell-2c, #cell-2e,
-#cell-3b, #cell-3d,
-#cell-4a, #cell-4c, #cell-4e,
-#cell-5b, #cell-5d {
+#cell-12, #cell-14, 
+#cell-21, #cell-23, #cell-25,
+#cell-32, #cell-34,
+#cell-41, #cell-43, #cell-45,
+#cell-52, #cell-54 {
   background-color: #eeeeee;
 }
 
-#cell-1c,
-#cell-2b, #cell-2d,
-#cell-3a, #cell-3e,
-#cell-4b, #cell-4d,
-#cell-5c {
+#cell-13,
+#cell-22, #cell-24,
+#cell-31, #cell-35,
+#cell-42, #cell-44,
+#cell-53 {
   background-color: #2d4eb2;
 }
 
-#cell-1a, #cell-1e,
-#cell-3c,
-#cell-5a, #cell-5e {
+#cell-11, #cell-15,
+#cell-33,
+#cell-51, #cell-55 {
   background-color: #919191;
 }
 
