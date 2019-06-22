@@ -18,15 +18,28 @@
 //= require_tree .
 
 let turn = 1;               //ターンを表すフラグ 1:先攻 2:後攻
-let move_flg = 0;           //コマの移動中かどうかを表すフラグ
+var move_flg = false;           //コマの移動中かどうかを表すフラグ
 var move_point_id = "";     //移動元のID
 var blue_stock = 6;         //青のコマ数
 var white_stock = 6;        //白のコマ数
 var row = 0;                //クリックしたテーブルの縦座標Y
 var col = 0;                //クリックしたテーブルの横座標X
-var row_bk = 0;
-var col_bk = 0;
-var ban = [                 //盤面の状態
+var row_bk = 0;             //Y座標のバックアップ
+var col_bk = 0;             //X座標のバックアップ
+
+/* 盤面の状態
+0:[中立マス] なし
+1:[中立マス] 青コマ
+2:[中立マス] 白コマ
+3:[白マス] なし
+4:[白マス] 青コマ
+5:[白マス] 白コマ
+6:[青マス] なし
+7:[青マス] 青コマ
+8:[青マス] 白コマ
+9:外枠
+*/
+var ban = [
   [9,9,9,9,9,9,9],
   [9,0,3,6,3,0,9],
   [9,3,6,3,6,3,9],
@@ -41,37 +54,37 @@ $(function(){
     //クリックされた場所を記録する
     row = $(this).closest('tr').index();    //縦
     col = this.cellIndex;                   //横
-    console.log('Row: ' + row + ', Column: ' + col);
 
     //先攻のターン
     if(turn == 1){
       //コマの移動中ではない
-      if(move_flg == 0){
+      if(!move_flg){
         if($(this).text() == "●"){
           $(this).text('★');  
-          move_flg = 1;
+          move_flg = true;
           move_point_id = '#' + $(this).attr('id');   //移動元IDを記録
           move_record();
-          console.log(move_point_id);
           pullBan(); 
+          return false;
         }else if($(this).text() == ''){
           if(blue_stock > 0){
             $(this).text('●');
             stock_calc(--blue_stock);
             putBan();
           }
+          return false;
         }  
       //コマの移動中
-      }else if(move_flg == 1){
+      }else{
         if($(this).text() == '★'){
           $(this).text('●');
           putBan();
-          move_flg = 0;
+          move_flg = false;
         }else if($(this).text() == ''){
           if(judg_move()){
             $(this).text('●');
             $(move_point_id).text('');
-            move_flg = 0;
+            move_flg = false;
             putBan();
             reverse();
             $('#msg').text('');
@@ -85,10 +98,10 @@ $(function(){
     //後攻のターン
     }else{
       //コマの移動中ではない
-      if(move_flg == 0){
+      if(!move_flg){
         if($(this).text() == "○"){
           $(this).text('★');  
-          move_flg = 1;
+          move_flg = true;
           move_point_id = '#' + $(this).attr('id');   //移動元IDを記録
           move_record();
           console.log(move_point_id); 
@@ -101,16 +114,16 @@ $(function(){
           }
         }  
       //コマの移動中
-      }else if(move_flg == 1){
+      }else{
         if($(this).text() == '★'){
           $(this).text('○');
           putBan();
-          move_flg = 0;
+          move_flg = false;
         }else if($(this).text() == ''){
           if(judg_move()){
             $(this).text('○');
             $(move_point_id).text('');
-            move_flg = 0;
+            move_flg = false;
             putBan();
             reverse();
             $('#msg').text('');
@@ -122,12 +135,12 @@ $(function(){
         }
       } 
     }
-    dispBan();
+    return false;
   });
 
   //ターン終了ボタンのクリックイベント
   $('#turn-end').click(function(){
-    if(move_flg == 0){
+    if(!move_flg){
       turn = 3 - turn;
       if(turn == 1){
         $('#current-turn').text('青のターン');
