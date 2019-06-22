@@ -17,15 +17,15 @@
 //= require jquery_ujs
 //= require_tree .
 
-let turn = 1;               //ターンを表すフラグ 1:先攻 2:後攻
-var moveFlg = false;           //コマの移動中かどうかを表すフラグ
+let turn = 1;             //ターンを表すフラグ 1:先攻 2:後攻
+var moveFlg = false;      //コマの移動中かどうかを表すフラグ
 var movePointId = "";     //移動元のID
-var blueStock = 6;         //青のコマ数
-var whiteStock = 6;        //白のコマ数
-var row = 0;                //クリックしたテーブルの縦座標Y
-var col = 0;                //クリックしたテーブルの横座標X
-var rowBk = 0;             //Y座標のバックアップ
-var colBk = 0;             //X座標のバックアップ
+var blueStock = 6;        //青のコマ数
+var whiteStock = 6;       //白のコマ数
+var row = 0;              //クリックしたテーブルの縦座標Y
+var col = 0;              //クリックしたテーブルの横座標X
+var rowBk = 0;            //Y座標のバックアップ
+var colBk = 0;            //X座標のバックアップ
 
 /* 盤面の状態
 0:[中立マス] なし
