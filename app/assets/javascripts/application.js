@@ -57,25 +57,8 @@ $(function(){
 
     //先攻のターン
     if(turn == 1){
-      //コマの移動中ではない
-      if(!move_flg){
-        if($(this).text() == "●"){
-          $(this).text('★');  
-          move_flg = true;
-          move_point_id = '#' + $(this).attr('id');   //移動元IDを記録
-          move_record();
-          pullBan(); 
-          return false;
-        }else if($(this).text() == ''){
-          if(blue_stock > 0){
-            $(this).text('●');
-            stock_calc(--blue_stock);
-            putBan();
-          }
-          return false;
-        }  
       //コマの移動中
-      }else{
+      if(move_flg){
         if($(this).text() == '★'){
           $(this).text('●');
           putBan();
@@ -94,27 +77,28 @@ $(function(){
         }else{
           $('#msg').text('そこには置けません！！');
         }
-      }
-    //後攻のターン
-    }else{
       //コマの移動中ではない
-      if(!move_flg){
-        if($(this).text() == "○"){
-          $(this).text('★');  
+      }else{
+        if($(this).text() == "●"){
+          $(this).text('★');
           move_flg = true;
           move_point_id = '#' + $(this).attr('id');   //移動元IDを記録
           move_record();
-          console.log(move_point_id); 
           pullBan();
+          return false;
         }else if($(this).text() == ''){
-          if(white_stock > 0){
-            $(this).text('○');
-            stock_calc(--white_stock);
+          if(blue_stock > 0){
+            $(this).text('●');
+            stock_calc(--blue_stock);
             putBan();
           }
-        }  
+          return false;
+        }
+      }
+    //後攻のターン
+    }else{
       //コマの移動中
-      }else{
+      if(move_flg){
         if($(this).text() == '★'){
           $(this).text('○');
           putBan();
@@ -133,22 +117,39 @@ $(function(){
         }else{
           $('#msg').text('そこには置けません！！');
         }
-      } 
+      //コマの移動中ではない
+      }else{
+        if($(this).text() == "○"){
+          $(this).text('★');
+          move_flg = true;
+          move_point_id = '#' + $(this).attr('id');   //移動元IDを記録
+          move_record();
+          console.log(move_point_id);
+          pullBan();
+        }else if($(this).text() == ''){
+          if(white_stock > 0){
+            $(this).text('○');
+            stock_calc(--white_stock);
+            putBan();
+          }
+        }
+      }
     }
     return false;
   });
 
   //ターン終了ボタンのクリックイベント
   $('#turn-end').click(function(){
-    if(!move_flg){
-      turn = 3 - turn;
-      if(turn == 1){
-        $('#current-turn').text('青のターン');
-      }else{
-        $('#current-turn').text('白のターン');
-      }
-    }else{
+    if(move_flg){
       $('#msg').text('移動が終わっていません！！');
+      return false;
+    }
+
+    turn = 3 - turn;
+    if(turn == 1){
+      $('#current-turn').text('青のターン');
+    }else{
+      $('#current-turn').text('白のターン');
     }
   });
 
@@ -193,7 +194,7 @@ $(function(){
     var absX = Math.abs(col - col_bk);  //絶対値
     var rowDiff = -(Math.sign(row_bk - row));
     var colDiff = -(Math.sign(col_bk - col));
-    var num = ban[row_bk][col_bk]; 
+    var num = ban[row_bk][col_bk];
     var y = row_bk;
     var x = col_bk;
     console.log('absY: ' + absY + ', absX: ' + absX);
@@ -290,6 +291,3 @@ $(function(){
     //console.log(ban[6]);
   }
 });
-
-
-
