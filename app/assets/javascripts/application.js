@@ -233,53 +233,38 @@ $(function(){
   //コマの裏返し処理
   function reverse(){
     var ry,rx,dy,dx;
-    //dispBan();
-    //debugger;
-
 
     for(dy = -1; dy <= 1; dy++){
       for(dx = -1; dx <= 1; dx++){
-        if(!(dy == 0 && dx == 0) && ban[row][col] != ban[row + dy][col + dx]){
-          ry = row;
-          rx = col;
-          while(ry >=1 && ry <= 5 && rx >= 1 && rx <= 5 && ban[ry][rx] != 0 && ban[ry][rx] != 3 && ban[ry][rx] != 6){
-            ry += dy;
-            rx += dx;
-            //debugger;
-            //同じ色のコマか？
-            if(Math.abs(ban[row][col] - ban[ry][rx]) == 0 || Math.abs(ban[row][col] - ban[ry][rx]) == 3 || Math.abs(ban[row][col] - ban[ry][rx]) == 6){
+        if((dy == 0 && dx == 0) || ban[row][col] == ban[row + dy][col + dx]){
+          continue;
+        }
+
+        ry = row;
+        rx = col;
+        while(ry >=1 && ry <= 5 && rx >= 1 && rx <= 5 && ban[ry][rx] != 0 && ban[ry][rx] != 3 && ban[ry][rx] != 6){
+          ry += dy;
+          rx += dx;
+          //同じ色のコマか？
+          if(Math.abs(ban[row][col] - ban[ry][rx]) == 0 || Math.abs(ban[row][col] - ban[ry][rx]) == 3 || Math.abs(ban[row][col] - ban[ry][rx]) == 6){
+            ry -= dy;
+            rx -= dx;
+
+            while(!(ry == row && rx == col)){
+              if(ban[ry][rx] == 1 || ban[ry][rx] == 4 || ban[ry][rx] == 7){
+                $('#cell-' + ry + '' + rx).text('○');
+                ban[ry][rx] += 1;
+              }else if(ban[ry][rx] == 2 || ban[ry][rx] == 5 || ban[ry][rx] == 8){
+                $('#cell-' + ry + '' + rx).text('●');
+                ban[ry][rx] -= 1;
+              }
               ry -= dy;
               rx -= dx;
-
-              while(!(ry == row && rx == col)){
-                //debugger;
-                if(ban[ry][rx] == 1 || ban[ry][rx] == 4 || ban[ry][rx] == 7){
-                  //debugger;
-                  $('#cell-' + ry + '' + rx).text('○');
-                  ban[ry][rx] += 1;
-                }else if(ban[ry][rx] == 2 || ban[ry][rx] == 5 || ban[ry][rx] == 8){
-                  //debugger;
-                  $('#cell-' + ry + '' + rx).text('●');
-                  ban[ry][rx] -= 1;
-                }
-                ry -= dy;
-                rx -= dx;
-              }
-              break;
             }
+            break;
           }
         }
       }
     }
-  }
-  //盤の状態を表示する
-  function dispBan(){
-    //console.log(ban[0]);
-    console.log(ban[1]);
-    console.log(ban[2]);
-    console.log(ban[3]);
-    console.log(ban[4]);
-    console.log(ban[5]);
-    //console.log(ban[6]);
   }
 });
