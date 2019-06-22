@@ -17,16 +17,29 @@
 //= require jquery_ujs
 //= require_tree .
 
-let turn = 1;               //ターンを表すフラグ 1:先攻 2:後攻
-let move_flg = 0;           //コマの移動中かどうかを表すフラグ
-var move_point_id = "";     //移動元のID
-var blue_stock = 6;         //青のコマ数
-var white_stock = 6;        //白のコマ数
-var row = 0;                //クリックしたテーブルの縦座標Y
-var col = 0;                //クリックしたテーブルの横座標X
-var row_bk = 0;
-var col_bk = 0;
-var ban = [                 //盤面の状態
+let turn = 1;             //ターンを表すフラグ 1:先攻 2:後攻
+var moveFlg = false;      //コマの移動中かどうかを表すフラグ
+var movePointId = "";     //移動元のID
+var blueStock = 6;        //青のコマ数
+var whiteStock = 6;       //白のコマ数
+var row = 0;              //クリックしたテーブルの縦座標Y
+var col = 0;              //クリックしたテーブルの横座標X
+var rowBk = 0;            //Y座標のバックアップ
+var colBk = 0;            //X座標のバックアップ
+
+/* 盤面の状態
+0:[中立マス] なし
+1:[中立マス] 青コマ
+2:[中立マス] 白コマ
+3:[白マス] なし
+4:[白マス] 青コマ
+5:[白マス] 白コマ
+6:[青マス] なし
+7:[青マス] 青コマ
+8:[青マス] 白コマ
+9:外枠
+*/
+var ban = [
   [9,9,9,9,9,9,9],
   [9,0,3,6,3,0,9],
   [9,3,6,3,6,3,9],
@@ -41,37 +54,20 @@ $(function(){
     //クリックされた場所を記録する
     row = $(this).closest('tr').index();    //縦
     col = this.cellIndex;                   //横
-    console.log('Row: ' + row + ', Column: ' + col);
 
     //先攻のターン
     if(turn == 1){
-      //コマの移動中ではない
-      if(move_flg == 0){
-        if($(this).text() == "●"){
-          $(this).text('★');  
-          move_flg = 1;
-          move_point_id = '#' + $(this).attr('id');   //移動元IDを記録
-          move_record();
-          console.log(move_point_id);
-          pullBan(); 
-        }else if($(this).text() == ''){
-          if(blue_stock > 0){
-            $(this).text('●');
-            stock_calc(--blue_stock);
-            putBan();
-          }
-        }  
       //コマの移動中
-      }else if(move_flg == 1){
+      if(moveFlg){
         if($(this).text() == '★'){
           $(this).text('●');
           putBan();
-          move_flg = 0;
+          moveFlg = false;
         }else if($(this).text() == ''){
-          if(judg_move()){
+          if(judgMove()){
             $(this).text('●');
-            $(move_point_id).text('');
-            move_flg = 0;
+            $(movePointId).text('');
+            moveFlg = false;
             putBan();
             reverse();
             $('#msg').text('');
@@ -80,37 +76,38 @@ $(function(){
           }
         }else{
           $('#msg').text('そこには置けません！！');
+        }
+      //コマの移動中ではない
+      }else{
+        if($(this).text() == "●"){
+          $(this).text('★');
+          moveFlg = true;
+          movePointId = '#' + $(this).attr('id');   //移動元IDを記録
+          moveRecord();
+          pullBan();
+          return false;
+        }else if($(this).text() == ''){
+          if(blueStock > 0){
+            $(this).text('●');
+            stockCalc(--blueStock);
+            putBan();
+          }
+          return false;
         }
       }
     //後攻のターン
     }else{
-      //コマの移動中ではない
-      if(move_flg == 0){
-        if($(this).text() == "○"){
-          $(this).text('★');  
-          move_flg = 1;
-          move_point_id = '#' + $(this).attr('id');   //移動元IDを記録
-          move_record();
-          console.log(move_point_id); 
-          pullBan();
-        }else if($(this).text() == ''){
-          if(white_stock > 0){
-            $(this).text('○');
-            stock_calc(--white_stock);
-            putBan();
-          }
-        }  
       //コマの移動中
-      }else if(move_flg == 1){
+      if(moveFlg){
         if($(this).text() == '★'){
           $(this).text('○');
           putBan();
-          move_flg = 0;
+          moveFlg = false;
         }else if($(this).text() == ''){
-          if(judg_move()){
+          if(judgMove()){
             $(this).text('○');
-            $(move_point_id).text('');
-            move_flg = 0;
+            $(movePointId).text('');
+            moveFlg = false;
             putBan();
             reverse();
             $('#msg').text('');
@@ -120,41 +117,57 @@ $(function(){
         }else{
           $('#msg').text('そこには置けません！！');
         }
-      } 
+      //コマの移動中ではない
+      }else{
+        if($(this).text() == "○"){
+          $(this).text('★');
+          moveFlg = true;
+          movePointId = '#' + $(this).attr('id');   //移動元IDを記録
+          moveRecord();
+          pullBan();
+        }else if($(this).text() == ''){
+          if(whiteStock > 0){
+            $(this).text('○');
+            stockCalc(--whiteStock);
+            putBan();
+          }
+        }
+      }
     }
-    dispBan();
+    return false;
   });
 
   //ターン終了ボタンのクリックイベント
   $('#turn-end').click(function(){
-    if(move_flg == 0){
-      turn = 3 - turn;
-      if(turn == 1){
-        $('#current-turn').text('青のターン');
-      }else{
-        $('#current-turn').text('白のターン');
-      }
-    }else{
+    if(moveFlg){
       $('#msg').text('移動が終わっていません！！');
+      return false;
+    }
+
+    turn = 3 - turn;
+    if(turn == 1){
+      $('#current-turn').text('青のターン');
+    }else{
+      $('#current-turn').text('白のターン');
     }
   });
 
   //ストック計算
-  function stock_calc(stock){
-    var disp_stock = "";
+  function stockCalc(stock){
+    var dispStock = "";
 
     for(var i=0; i < stock; i++){
       if(turn == 1){
-        disp_stock += "●";
+        dispStock += "●";
       }else{
-        disp_stock += "○";
+        dispStock += "○";
       }
     }
 
     if(turn == 1){
-      $('#blue-piece').text(disp_stock);
+      $('#blue-piece').text(dispStock);
     }else{
-      $('#white-piece').text(disp_stock);
+      $('#white-piece').text(dispStock);
     }
   }
 
@@ -168,115 +181,90 @@ $(function(){
   }
 
   //移動まえの座標を記録する
-  function move_record(){
-    row_bk = row;
-    col_bk = col;
-    console.log('Rowbk: ' + row_bk + ', Colbk: ' + col_bk);
+  function moveRecord(){
+    rowBk = row;
+    colBk = col;
   }
 
   //移動できるか判定する
-  function judg_move(){
-    var absY = Math.abs(row - row_bk);  //絶対値
-    var absX = Math.abs(col - col_bk);  //絶対値
-    var rowDiff = -(Math.sign(row_bk - row));
-    var colDiff = -(Math.sign(col_bk - col));
-    var num = ban[row_bk][col_bk]; 
-    var y = row_bk;
-    var x = col_bk;
-    console.log('absY: ' + absY + ', absX: ' + absX);
+  function judgMove(){
+    var absY = Math.abs(row - rowBk);  //絶対値
+    var absX = Math.abs(col - colBk);  //絶対値
 
+    //移動範囲が１マスならば移動できる
     if(absY <= 1 && absX <= 1){
-      if($(move_point_id).text('')){
+      if($(movePointId).text('')){
         return true;
       }
     }
+
     if(turn == 1){
-      if(absY == absX){
-        if(num == 6){
-          while(y != row){
-            y += rowDiff;
-            x += colDiff;
-            if(ban[y][x] != 6){
-              return false;
-            }
-          }
-          if(ban[y][x] == 6){
-            return true;
-          }
-        }
-      }
+      return judgDiagonal(absY, absX, 6);
     }else{
-      if(absY == absX){
-        if(num == 3){
-          while(y != row){
-            y += rowDiff;
-            x += colDiff;
-            if(ban[y][x] != 3){
-              return false;
-            }
-          }
-          if(ban[y][x] == 3){
-            return true;
-          }
-        }
+      return judgDiagonal(absY, absX, 3);
+    }
+  }
+
+  //斜め移動の判定
+  function judgDiagonal(absY, absX, n){
+    var rowSign = -(Math.sign(rowBk - row));   //signは正負または0を求める
+    var colSign = -(Math.sign(colBk - col));
+    var banNum = ban[rowBk][colBk];              //盤面の値
+    var y = rowBk;
+    var x = colBk;
+
+    //移動方向が斜めではない、または[指定マス]のコマなし
+    if(absY != absX || banNum != n){
+      return false;
+    }
+
+    while(y != row){
+      y += rowSign;
+      x += colSign;
+      if(ban[y][x] != n){
+        return false;
       }
     }
-    return false;
+    if(ban[y][x] == n){
+      return true;
+    }
   }
 
   //コマの裏返し処理
   function reverse(){
     var ry,rx,dy,dx;
-    //dispBan();
-    //debugger;
-
 
     for(dy = -1; dy <= 1; dy++){
       for(dx = -1; dx <= 1; dx++){
-        if(!(dy == 0 && dx == 0) && ban[row][col] != ban[row + dy][col + dx]){
-          ry = row;
-          rx = col;
-          while(ry >=1 && ry <= 5 && rx >= 1 && rx <= 5 && ban[ry][rx] != 0 && ban[ry][rx] != 3 && ban[ry][rx] != 6){
-            ry += dy;
-            rx += dx;
-            //debugger;
-            //同じ色のコマか？
-            if(Math.abs(ban[row][col] - ban[ry][rx]) == 0 || Math.abs(ban[row][col] - ban[ry][rx]) == 3 || Math.abs(ban[row][col] - ban[ry][rx]) == 6){
+        if((dy == 0 && dx == 0) || ban[row][col] == ban[row + dy][col + dx]){
+          continue;
+        }
+
+        ry = row;
+        rx = col;
+        while(ry >=1 && ry <= 5 && rx >= 1 && rx <= 5 && ban[ry][rx] != 0 && ban[ry][rx] != 3 && ban[ry][rx] != 6){
+          ry += dy;
+          rx += dx;
+          //同じ色のコマか？
+          if(Math.abs(ban[row][col] - ban[ry][rx]) == 0 || Math.abs(ban[row][col] - ban[ry][rx]) == 3 || Math.abs(ban[row][col] - ban[ry][rx]) == 6){
+            ry -= dy;
+            rx -= dx;
+
+            while(!(ry == row && rx == col)){
+              if(ban[ry][rx] == 1 || ban[ry][rx] == 4 || ban[ry][rx] == 7){
+                $('#cell-' + ry + '' + rx).text('○');
+                ban[ry][rx] += 1;
+              }else if(ban[ry][rx] == 2 || ban[ry][rx] == 5 || ban[ry][rx] == 8){
+                $('#cell-' + ry + '' + rx).text('●');
+                ban[ry][rx] -= 1;
+              }
               ry -= dy;
               rx -= dx;
-
-              while(!(ry == row && rx == col)){
-                //debugger;
-                if(ban[ry][rx] == 1 || ban[ry][rx] == 4 || ban[ry][rx] == 7){
-                  //debugger;
-                  $('#cell-' + ry + '' + rx).text('○');
-                  ban[ry][rx] += 1;
-                }else if(ban[ry][rx] == 2 || ban[ry][rx] == 5 || ban[ry][rx] == 8){
-                  //debugger;
-                  $('#cell-' + ry + '' + rx).text('●');
-                  ban[ry][rx] -= 1;
-                }
-                ry -= dy;
-                rx -= dx;
-              }
-              break;
             }
+            break;
           }
         }
       }
     }
   }
-  //盤の状態を表示する
-  function dispBan(){
-    //console.log(ban[0]);
-    console.log(ban[1]);
-    console.log(ban[2]);
-    console.log(ban[3]);
-    console.log(ban[4]);
-    console.log(ban[5]);
-    //console.log(ban[6]);
-  }
 });
-
-
-
