@@ -124,7 +124,6 @@ $(function(){
           move_flg = true;
           move_point_id = '#' + $(this).attr('id');   //移動元IDを記録
           move_record();
-          console.log(move_point_id);
           pullBan();
         }else if($(this).text() == ''){
           if(white_stock > 0){
@@ -185,57 +184,50 @@ $(function(){
   function move_record(){
     row_bk = row;
     col_bk = col;
-    console.log('Rowbk: ' + row_bk + ', Colbk: ' + col_bk);
   }
 
   //移動できるか判定する
   function judg_move(){
     var absY = Math.abs(row - row_bk);  //絶対値
     var absX = Math.abs(col - col_bk);  //絶対値
-    var rowDiff = -(Math.sign(row_bk - row));
-    var colDiff = -(Math.sign(col_bk - col));
-    var num = ban[row_bk][col_bk];
-    var y = row_bk;
-    var x = col_bk;
-    console.log('absY: ' + absY + ', absX: ' + absX);
 
+    //移動範囲が１マスならば移動できる
     if(absY <= 1 && absX <= 1){
       if($(move_point_id).text('')){
         return true;
       }
     }
+
     if(turn == 1){
-      if(absY == absX){
-        if(num == 6){
-          while(y != row){
-            y += rowDiff;
-            x += colDiff;
-            if(ban[y][x] != 6){
-              return false;
-            }
-          }
-          if(ban[y][x] == 6){
-            return true;
-          }
-        }
-      }
+      return judg_diagonal(absY, absX, 6);
     }else{
-      if(absY == absX){
-        if(num == 3){
-          while(y != row){
-            y += rowDiff;
-            x += colDiff;
-            if(ban[y][x] != 3){
-              return false;
-            }
-          }
-          if(ban[y][x] == 3){
-            return true;
-          }
-        }
+      return judg_diagonal(absY, absX, 3);
+    }
+  }
+
+  //斜め移動の判定
+  function judg_diagonal(absY, absX, n){
+    var rowSign = -(Math.sign(row_bk - row));   //signは正負または0を求める
+    var colSign = -(Math.sign(col_bk - col));
+    var banNum = ban[row_bk][col_bk];              //盤面の値
+    var y = row_bk;
+    var x = col_bk;
+
+    //移動方向が斜めではない、または[指定マス]のコマなし
+    if(absY != absX || banNum != n){
+      return false;
+    }
+
+    while(y != row){
+      y += rowSign;
+      x += colSign;
+      if(ban[y][x] != n){
+        return false;
       }
     }
-    return false;
+    if(ban[y][x] == n){
+      return true;
+    }
   }
 
   //コマの裏返し処理
