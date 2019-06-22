@@ -18,14 +18,14 @@
 //= require_tree .
 
 let turn = 1;               //ターンを表すフラグ 1:先攻 2:後攻
-var move_flg = false;           //コマの移動中かどうかを表すフラグ
-var move_point_id = "";     //移動元のID
-var blue_stock = 6;         //青のコマ数
-var white_stock = 6;        //白のコマ数
+var moveFlg = false;           //コマの移動中かどうかを表すフラグ
+var movePointId = "";     //移動元のID
+var blueStock = 6;         //青のコマ数
+var whiteStock = 6;        //白のコマ数
 var row = 0;                //クリックしたテーブルの縦座標Y
 var col = 0;                //クリックしたテーブルの横座標X
-var row_bk = 0;             //Y座標のバックアップ
-var col_bk = 0;             //X座標のバックアップ
+var rowBk = 0;             //Y座標のバックアップ
+var colBk = 0;             //X座標のバックアップ
 
 /* 盤面の状態
 0:[中立マス] なし
@@ -58,16 +58,16 @@ $(function(){
     //先攻のターン
     if(turn == 1){
       //コマの移動中
-      if(move_flg){
+      if(moveFlg){
         if($(this).text() == '★'){
           $(this).text('●');
           putBan();
-          move_flg = false;
+          moveFlg = false;
         }else if($(this).text() == ''){
-          if(judg_move()){
+          if(judgMove()){
             $(this).text('●');
-            $(move_point_id).text('');
-            move_flg = false;
+            $(movePointId).text('');
+            moveFlg = false;
             putBan();
             reverse();
             $('#msg').text('');
@@ -81,15 +81,15 @@ $(function(){
       }else{
         if($(this).text() == "●"){
           $(this).text('★');
-          move_flg = true;
-          move_point_id = '#' + $(this).attr('id');   //移動元IDを記録
-          move_record();
+          moveFlg = true;
+          movePointId = '#' + $(this).attr('id');   //移動元IDを記録
+          moveRecord();
           pullBan();
           return false;
         }else if($(this).text() == ''){
-          if(blue_stock > 0){
+          if(blueStock > 0){
             $(this).text('●');
-            stock_calc(--blue_stock);
+            stockCalc(--blueStock);
             putBan();
           }
           return false;
@@ -98,16 +98,16 @@ $(function(){
     //後攻のターン
     }else{
       //コマの移動中
-      if(move_flg){
+      if(moveFlg){
         if($(this).text() == '★'){
           $(this).text('○');
           putBan();
-          move_flg = false;
+          moveFlg = false;
         }else if($(this).text() == ''){
-          if(judg_move()){
+          if(judgMove()){
             $(this).text('○');
-            $(move_point_id).text('');
-            move_flg = false;
+            $(movePointId).text('');
+            moveFlg = false;
             putBan();
             reverse();
             $('#msg').text('');
@@ -121,14 +121,14 @@ $(function(){
       }else{
         if($(this).text() == "○"){
           $(this).text('★');
-          move_flg = true;
-          move_point_id = '#' + $(this).attr('id');   //移動元IDを記録
-          move_record();
+          moveFlg = true;
+          movePointId = '#' + $(this).attr('id');   //移動元IDを記録
+          moveRecord();
           pullBan();
         }else if($(this).text() == ''){
-          if(white_stock > 0){
+          if(whiteStock > 0){
             $(this).text('○');
-            stock_calc(--white_stock);
+            stockCalc(--whiteStock);
             putBan();
           }
         }
@@ -139,7 +139,7 @@ $(function(){
 
   //ターン終了ボタンのクリックイベント
   $('#turn-end').click(function(){
-    if(move_flg){
+    if(moveFlg){
       $('#msg').text('移動が終わっていません！！');
       return false;
     }
@@ -153,21 +153,21 @@ $(function(){
   });
 
   //ストック計算
-  function stock_calc(stock){
-    var disp_stock = "";
+  function stockCalc(stock){
+    var dispStock = "";
 
     for(var i=0; i < stock; i++){
       if(turn == 1){
-        disp_stock += "●";
+        dispStock += "●";
       }else{
-        disp_stock += "○";
+        dispStock += "○";
       }
     }
 
     if(turn == 1){
-      $('#blue-piece').text(disp_stock);
+      $('#blue-piece').text(dispStock);
     }else{
-      $('#white-piece').text(disp_stock);
+      $('#white-piece').text(dispStock);
     }
   }
 
@@ -181,37 +181,37 @@ $(function(){
   }
 
   //移動まえの座標を記録する
-  function move_record(){
-    row_bk = row;
-    col_bk = col;
+  function moveRecord(){
+    rowBk = row;
+    colBk = col;
   }
 
   //移動できるか判定する
-  function judg_move(){
-    var absY = Math.abs(row - row_bk);  //絶対値
-    var absX = Math.abs(col - col_bk);  //絶対値
+  function judgMove(){
+    var absY = Math.abs(row - rowBk);  //絶対値
+    var absX = Math.abs(col - colBk);  //絶対値
 
     //移動範囲が１マスならば移動できる
     if(absY <= 1 && absX <= 1){
-      if($(move_point_id).text('')){
+      if($(movePointId).text('')){
         return true;
       }
     }
 
     if(turn == 1){
-      return judg_diagonal(absY, absX, 6);
+      return judgDiagonal(absY, absX, 6);
     }else{
-      return judg_diagonal(absY, absX, 3);
+      return judgDiagonal(absY, absX, 3);
     }
   }
 
   //斜め移動の判定
-  function judg_diagonal(absY, absX, n){
-    var rowSign = -(Math.sign(row_bk - row));   //signは正負または0を求める
-    var colSign = -(Math.sign(col_bk - col));
-    var banNum = ban[row_bk][col_bk];              //盤面の値
-    var y = row_bk;
-    var x = col_bk;
+  function judgDiagonal(absY, absX, n){
+    var rowSign = -(Math.sign(rowBk - row));   //signは正負または0を求める
+    var colSign = -(Math.sign(colBk - col));
+    var banNum = ban[rowBk][colBk];              //盤面の値
+    var y = rowBk;
+    var x = colBk;
 
     //移動方向が斜めではない、または[指定マス]のコマなし
     if(absY != absX || banNum != n){
