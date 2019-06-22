@@ -63,6 +63,8 @@ $(function(){
           $(this).text('●');
           putBan();
           moveFlg = false;
+          turnChange();
+          return false;
         }else if($(this).text() == ''){
           if(judgMove()){
             $(this).text('●');
@@ -70,12 +72,15 @@ $(function(){
             moveFlg = false;
             putBan();
             reverse();
-            $('#msg').text('');
+            turnChange();
+            return false;
           }else{
             $('#msg').text('そこには置けません！！');
+            return false;
           }
         }else{
           $('#msg').text('そこには置けません！！');
+          return false;
         }
       //コマの移動中ではない
       }else{
@@ -91,6 +96,8 @@ $(function(){
             $(this).text('●');
             stockCalc(--blueStock);
             putBan();
+            turnChange();
+            return false;
           }
           return false;
         }
@@ -103,6 +110,8 @@ $(function(){
           $(this).text('○');
           putBan();
           moveFlg = false;
+          turnChange();
+          return false;
         }else if($(this).text() == ''){
           if(judgMove()){
             $(this).text('○');
@@ -110,12 +119,15 @@ $(function(){
             moveFlg = false;
             putBan();
             reverse();
-            $('#msg').text('');
+            turnChange();
+            return false;
           }else{
             $('#msg').text('そこには置けません！！');
+            return false;
           }
         }else{
           $('#msg').text('そこには置けません！！');
+          return false;
         }
       //コマの移動中ではない
       }else{
@@ -125,32 +137,31 @@ $(function(){
           movePointId = '#' + $(this).attr('id');   //移動元IDを記録
           moveRecord();
           pullBan();
+          return false;
         }else if($(this).text() == ''){
           if(whiteStock > 0){
             $(this).text('○');
             stockCalc(--whiteStock);
             putBan();
+            turnChange();
+            return false;
           }
+          return false;
         }
       }
     }
-    return false;
   });
 
-  //ターン終了ボタンのクリックイベント
-  $('#turn-end').click(function(){
-    if(moveFlg){
-      $('#msg').text('移動が終わっていません！！');
-      return false;
-    }
-
+  //ターン交代
+  function turnChange(){
+    $('#msg').text('');
     turn = 3 - turn;
     if(turn == 1){
       $('#current-turn').text('青のターン');
     }else{
       $('#current-turn').text('白のターン');
     }
-  });
+  }
 
   //ストック計算
   function stockCalc(stock){
