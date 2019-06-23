@@ -82,6 +82,7 @@ $(function(){
             $(movePointId).text('');
             putBan();
             reverse();
+            judgVictory(row, col);
             if(winFlg == loseFlg){
               turnChange();
               moveFlg = false;
@@ -106,7 +107,6 @@ $(function(){
             stockCalc(--blueStock);
             putBan();
             judgVictory(row, col);
-            //debugger;
             if(winFlg == loseFlg){
               turnChange();
             }
@@ -128,6 +128,7 @@ $(function(){
             $(movePointId).text('');
             putBan();
             reverse();
+            judgVictory(row, col);
             if(winFlg == loseFlg){
               turnChange();
               moveFlg = false;
