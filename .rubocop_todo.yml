@@ -8,14 +8,6 @@
 
 
 
-
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: compact, expanded
-Style/EmptyMethod:
-  Exclude:
-    - 'app/controllers/yonmoque_controller.rb'
-
 # Cop supports --auto-correct.
 Style/ExpandPathArguments:
   Exclude:

@@ -1,4 +1,3 @@
 class YonmoqueController < ApplicationController
-  def top
-  end
+  def top; end
 end
