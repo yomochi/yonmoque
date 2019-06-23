@@ -53,107 +53,113 @@ var ban = [
 
 $(function(){
   $('table td').click(function(){
-    //クリックされた場所を記録する
-    row = $(this).closest('tr').index();    //縦
-    col = this.cellIndex;                   //横
-
     if(winFlg == loseFlg){
-      //先攻のターン
-      if(turn == 1){
-        //コマの移動中
-        if(moveFlg){
-          if($(this).text() == '★'){
-            $(this).text('●');
-            putBan();
-            turnChange();
-            moveFlg = false;
-          }else if($(this).text() == ''){
-            if(judgMove()){
-              $(this).text('●');
-              $(movePointId).text('');
-              putBan();
-              reverse();
-              if(winFlg == loseFlg){
-                turnChange();
-                moveFlg = false;
-              }
-            }else{
-              $('#msg').text('そこには置けません！！');
-            }
-          }else{
-            $('#msg').text('そこには置けません！！');
-          }
-        //コマの移動中ではない
-        }else{
-          if($(this).text() == "●"){
-            $(this).text('★');
-            movePointId = '#' + $(this).attr('id');   //移動元IDを記録
-            moveRecord();
-            pullBan();
-            moveFlg = true;
-          }else if($(this).text() == ''){
-            if(blueStock > 0){
-              $(this).text('●');
-              stockCalc(--blueStock);
-              putBan();
-              judgVictory(row, col);
-              if(winFlg == loseFlg){
-                turnChange();
-              }
-            }
-          }
-        }
-      //後攻のターン
-      }else{
-        //コマの移動中
-        if(moveFlg){
-          if($(this).text() == '★'){
-            $(this).text('○');
-            putBan();
-            turnChange();
-            moveFlg = false;
-          }else if($(this).text() == ''){
-            if(judgMove()){
-              $(this).text('○');
-              $(movePointId).text('');
-              putBan();
-              reverse();
-              if(winFlg == loseFlg){
-                turnChange();
-                moveFlg = false;
-              }
-            }else{
-              $('#msg').text('そこには置けません！！');
-            }
-          }else{
-            $('#msg').text('そこには置けません！！');
-          }
-        //コマの移動中ではない
-        }else{
-          if($(this).text() == "○"){
-            $(this).text('★');
-            movePointId = '#' + $(this).attr('id');   //移動元IDを記録
-            moveRecord();
-            pullBan();
-            moveFlg = true;
-          }else if($(this).text() == ''){
-            if(whiteStock > 0){
-              $(this).text('○');
-              stockCalc(--whiteStock);
-              putBan();
-              judgVictory(row, col);
-              if(winFlg == loseFlg){
-                turnChange();
-              }
-            }
-          }
-        }
-      }
+      turnAction(this);
     }
     if(winFlg != loseFlg){
       gameEnd();
     }
   });
+
+  //ターンの処理
+  function turnAction(_this){
+    //クリックされた場所を記録する
+    row = $(_this).closest('tr').index();    //縦
+    col = _this.cellIndex;                   //横
+
+    //先攻のターン
+    if(turn == 1){
+      //コマの移動中
+      if(moveFlg){
+        if($(_this).text() == '★'){
+          $(_this).text('●');
+          putBan();
+          turnChange();
+          moveFlg = false;
+        }else if($(_this).text() == ''){
+          if(judgMove()){
+            $(_this).text('●');
+            $(movePointId).text('');
+            putBan();
+            reverse();
+            if(winFlg == loseFlg){
+              turnChange();
+              moveFlg = false;
+            }
+          }else{
+            $('#msg').text('そこには置けません！！');
+          }
+        }else{
+          $('#msg').text('そこには置けません！！');
+        }
+      //コマの移動中ではない
+      }else{
+        if($(_this).text() == "●"){
+          $(_this).text('★');
+          movePointId = '#' + $(_this).attr('id');   //移動元IDを記録
+          moveRecord();
+          pullBan();
+          moveFlg = true;
+        }else if($(_this).text() == ''){
+          if(blueStock > 0){
+            $(_this).text('●');
+            stockCalc(--blueStock);
+            putBan();
+            judgVictory(row, col);
+            //debugger;
+            if(winFlg == loseFlg){
+              turnChange();
+            }
+          }
+        }
+      }
+    //後攻のターン
+    }else{
+      //コマの移動中
+      if(moveFlg){
+        if($(_this).text() == '★'){
+          $(_this).text('○');
+          putBan();
+          turnChange();
+          moveFlg = false;
+        }else if($(_this).text() == ''){
+          if(judgMove()){
+            $(_this).text('○');
+            $(movePointId).text('');
+            putBan();
+            reverse();
+            if(winFlg == loseFlg){
+              turnChange();
+              moveFlg = false;
+            }
+          }else{
+            $('#msg').text('そこには置けません！！');
+          }
+        }else{
+          $('#msg').text('そこには置けません！！');
+        }
+      //コマの移動中ではない
+      }else{
+        if($(_this).text() == "○"){
+          $(_this).text('★');
+          movePointId = '#' + $(_this).attr('id');   //移動元IDを記録
+          moveRecord();
+          pullBan();
+          moveFlg = true;
+        }else if($(_this).text() == ''){
+          if(whiteStock > 0){
+            $(_this).text('○');
+            stockCalc(--whiteStock);
+            putBan();
+            judgVictory(row, col);
+            if(winFlg == loseFlg){
+              turnChange();
+            }
+          }
+        }
+      }
+    }
+  }
 
   //ターン交代
   function turnChange(){
