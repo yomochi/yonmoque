@@ -53,6 +53,7 @@ Style/StringLiterals:
     - 'config/environments/production.rb'
     - 'config/puma.rb'
     - 'test/application_system_test_case.rb'
+    - 'db/schema.rb'
 
 # Cop supports --auto-correct.
 # Configuration parameters: MinSize.
@@ -65,3 +66,16 @@ Style/SymbolArray:
 # URISchemes: http, https
 Metrics/LineLength:
   Max: 112
+
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: empty_lines, no_empty_lines
+Layout/EmptyLinesAroundBlockBody:
+  Exclude:
+    - 'db/schema.rb'
+
+# Cop supports --auto-correct.
+# Configuration parameters: MinDigits, Strict.
+Style/NumericLiterals:
+  Exclude:
+    - 'db/schema.rb'
