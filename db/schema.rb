@@ -18,6 +18,8 @@ ActiveRecord::Schema.define(version: 2019_06_23_033441) do
     t.integer "blueStock", null: false
     t.integer "whiteStock", null: false
     t.integer "victory", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

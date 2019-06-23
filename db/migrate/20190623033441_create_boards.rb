@@ -6,6 +6,7 @@ class CreateBoards < ActiveRecord::Migration[5.2]
       t.integer :blueStock, null: false
       t.integer :whiteStock, null: false
       t.integer :victory, null: false
+      t.timestamps
     end
   end
 end
