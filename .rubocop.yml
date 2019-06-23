@@ -1,0 +1,67 @@
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBrackets.
+# SupportedStyles: space, no_space, compact
+# SupportedStylesForEmptyBrackets: space, no_space
+Layout/SpaceInsideArrayLiteralBrackets:
+  Exclude:
+    - 'config/environments/production.rb'
+
+# Cop supports --auto-correct.
+# Configuration parameters: AutoCorrect, EnforcedStyle.
+# SupportedStyles: nested, compact
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'test/test_helper.rb'
+
+Style/Documentation:
+  Enabled: false
+
+# Cop supports --auto-correct.
+Style/ExpandPathArguments:
+  Exclude:
+    - 'bin/rails'
+    - 'bin/rake'
+
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: always, never
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/MixinUsage:
+  Exclude:
+    - 'bin/setup'
+    - 'bin/update'
+
+# Cop supports --auto-correct.
+Style/RedundantBegin:
+  Exclude:
+    - 'bin/yarn'
+
+# Cop supports --auto-correct.
+Style/StderrPuts:
+  Exclude:
+    - 'bin/yarn'
+
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
+# SupportedStyles: single_quotes, double_quotes
+Style/StringLiterals:
+  Exclude:
+    - 'bin/spring'
+    - 'bin/yarn'
+    - 'config/environments/production.rb'
+    - 'config/puma.rb'
+    - 'test/application_system_test_case.rb'
+
+# Cop supports --auto-correct.
+# Configuration parameters: MinSize.
+# SupportedStyles: percent, brackets
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+# Cop supports --auto-correct.
+# Configuration parameters: AutoCorrect, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
+# URISchemes: http, https
+Metrics/LineLength:
+  Max: 112
