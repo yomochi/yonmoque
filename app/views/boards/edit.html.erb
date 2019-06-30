@@ -1,0 +1,10 @@
+edit.
+
+<%= form_for @board do |f| %>
+  situation:<%= f.text_field(:situation) %><br>
+  turn:<%= f.text_field(:turn)%><br>
+  bluestock:<%= f.text_field(:blueStock) %><br>
+  whitestock:<%= f.text_field(:whiteStock) %><br>
+  victory:<%= f.text_field(:victory) %><br>
+  <%= submit_tag("update") %>
+<% end %>

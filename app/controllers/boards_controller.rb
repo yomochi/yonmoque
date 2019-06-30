@@ -1,9 +1,32 @@
 class BoardsController < ApplicationController
   def index; end
-  def new; end
-  def create; end
-  def show; end
-  def edit; end
-  def update; end
+
+  def new
+    @board = Board.new
+  end
+
+  def create
+    Board.create(board_params)
+  end
+
+  def show
+    @board = Board.find(params[:id])
+  end
+
+  def edit
+    @board = Board.find(params[:id])
+  end
+
+  def update
+    Board.update(board_params)
+  end
+
   def destroy; end
+
+  private
+
+  #require モデル　permitが許可するカラム
+  def board_params
+    params.require(:board).permit(:situation, :turn, :blueStock, :whiteStock, :victory)
+  end
 end
