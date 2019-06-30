@@ -19,6 +19,7 @@ class BoardsController < ApplicationController
 
   def update
     Board.update(board_params)
+    head :no_content
   end
 
   def destroy; end

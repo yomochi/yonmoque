@@ -395,4 +395,21 @@ $(function(){
       $('#msg').text('白の勝ち');
     }
   }
+
+  var jsonData ={
+    "board":{
+      situation:88,
+      turn:2,
+      blueStock:2,
+      whiteStock:2,
+      victory:0
+    }
+   }
+
+  $.ajax({
+    url: "/boards/1",
+    type: "PATCH",
+    dataType   : 'json',
+    data: jsonData
+  });
 });
