@@ -10,15 +10,15 @@ RSpec.describe Board, type: :model do
   end
 
   describe 'turn' do
-    it "turnの値を確認するテスト" do
-      board = Board.new(
-        situation: '0' * 97,
-        turn: 1,
-        blueStock: 1,
-        whiteStock: 1,
-        victory: 1
-      )
-      expect(board).to be_valid
+    let(:turn) { 1 }
+    let(:board) { build(:board, turn: turn) }
+
+    it { expect(board).to be_valid }
+
+    context 'turnの値が4の場合' do
+      let(:turn) { 4 }
+
+      it { expect(board).to_not be_valid }
     end
   end
 end
