@@ -1,0 +1,31 @@
+new.
+<!--
+t.string "situation", null: false
+t.integer "turn", null: false
+t.integer "blueStock", null: false
+t.integer "whiteStock", null: false
+t.integer "victory", null: false
+t.datetime "created_at", null: false
+t.datetime "updated_at", null: false
+
+situation	turn	blueStock	whiteStock	victory
+-->
+
+<%= form_tag("/boards", method: "post") do %>
+  <%= text_field_tag(:situation) %>
+  <%= text_field_tag(:turn) %>
+  <%= text_field_tag(:blueStock) %>
+  <%= text_field_tag(:whiteStock) %>
+  <%= text_field_tag(:victory) %>
+  <%= submit_tag("create") %>
+<% end %>
+
+
+<%= form_for @board do |f| %>
+  situation:<%= f.text_field(:situation) %><br>
+  turn:<%= f.text_field(:turn)%><br>
+  bluestock:<%= f.text_field(:blueStock) %><br>
+  whitestock:<%= f.text_field(:whiteStock) %><br>
+  victory:<%= f.text_field(:victory) %><br>
+  <%= submit_tag("update") %>
+<% end %>

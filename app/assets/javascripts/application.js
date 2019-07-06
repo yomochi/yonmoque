@@ -26,8 +26,7 @@ var row = 0;              //クリックしたテーブルの縦座標Y
 var col = 0;              //クリックしたテーブルの横座標X
 var rowBk = 0;            //Y座標のバックアップ
 var colBk = 0;            //X座標のバックアップ
-var winFlg = false;       //勝利判定
-var loseFlg = false;      //敗北判定
+var victoryFlg = 0;       //勝利判定 0:なし　1:青の勝ち　2:白の勝ち
 
 /* 盤面の状態
 0:[中立マス] なし
@@ -53,10 +52,10 @@ var ban = [
 
 $(function(){
   $('table td').click(function(){
-    if(winFlg == loseFlg){
+    if(victoryFlg == 0){
       turnAction(this);
     }
-    if(winFlg != loseFlg){
+    if(victoryFlg != 0){
       gameEnd();
     }
   });
@@ -82,7 +81,8 @@ $(function(){
             $(movePointId).text('');
             putBan();
             reverse();
-            if(winFlg == loseFlg){
+            judgVictory(row, col);
+            if(victoryFlg == 0){
               turnChange();
               moveFlg = false;
             }
@@ -106,8 +106,7 @@ $(function(){
             stockCalc(--blueStock);
             putBan();
             judgVictory(row, col);
-            //debugger;
-            if(winFlg == loseFlg){
+            if(victoryFlg == 0){
               turnChange();
             }
           }
@@ -128,7 +127,8 @@ $(function(){
             $(movePointId).text('');
             putBan();
             reverse();
-            if(winFlg == loseFlg){
+            judgVictory(row, col);
+            if(victoryFlg == 0){
               turnChange();
               moveFlg = false;
             }
@@ -152,7 +152,7 @@ $(function(){
             stockCalc(--whiteStock);
             putBan();
             judgVictory(row, col);
-            if(winFlg == loseFlg){
+            if(victoryFlg == 0){
               turnChange();
             }
           }
@@ -281,10 +281,6 @@ $(function(){
                 ban[ry][rx] -= 1;
                 resVictory = judgVictory(ry, rx);
               }
-              //4目以上コマが並んでいたら
-              if(winFlg != loseFlg){
-                return false;
-              }
               ry -= dy;
               rx -= dx;
             }
@@ -292,6 +288,10 @@ $(function(){
           }
         }
       }
+    }
+    //4目以上コマが並んでいたら
+    if(victoryFlg != 0){
+      return false;
     }
   }
 
@@ -364,36 +364,52 @@ $(function(){
     }
     return cnt;
   }
+
   function judgCnt(cnt){
+
+    if(victoryFlg != 0 && victoryFlg != turn){
+      return false;
+    }
     if(cnt == 5){
-      loseFlg = true;
+      victoryFlg = 3 - turn;
+      return false;
     }
     if(cnt == 4){
-      winFlg = true;
+      victoryFlg = turn;
+      return false;
     }
   }
 
   function gameEnd(){
     //コマをおいて４つ並んだ場合は無視する
-    if(moveFlg == false && winFlg){
-      winFlg = false;
+    if(moveFlg == false && victoryFlg == turn){
+      victoryFlg = 0;
       turnChange();
       return false;
     }
 
     $('#current-turn').text('');
-    if(turn == 1){
-      if(winFlg){
-        $('#msg').text('青の勝ち');
-      }else{
-        $('#msg').text('白の勝ち');
-      }
+    if(victoryFlg == 1){
+      $('#msg').text('青の勝ち');
     }else{
-      if(winFlg){
-        $('#msg').text('白の勝ち');
-      }else{
-        $('#msg').text('青の勝ち');
-      }
+      $('#msg').text('白の勝ち');
     }
   }
+
+  var jsonData ={
+    "board":{
+      situation:88,
+      turn:2,
+      blueStock:2,
+      whiteStock:2,
+      victory:0
+    }
+   }
+
+  $.ajax({
+    url: "/boards/1",
+    type: "PATCH",
+    dataType   : 'json',
+    data: jsonData
+  });
 });
