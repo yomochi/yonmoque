@@ -74,7 +74,6 @@ $(function(){
         if($(_this).text() == '★'){
           $(_this).text('●');
           putBan();
-          turnChange();
           moveFlg = false;
         }else if($(_this).text() == ''){
           if(judgMove()){
@@ -121,7 +120,6 @@ $(function(){
         if($(_this).text() == '★'){
           $(_this).text('○');
           putBan();
-          turnChange();
           moveFlg = false;
         }else if($(_this).text() == ''){
           if(judgMove()){
@@ -169,13 +167,8 @@ $(function(){
     $('#msg').text('');
     turn = 3 - turn;
     dispCurrentTurn();
-    // if(turn == 1){
-    //   $('#current-turn').text('青のターン');
-    // }else{
-    //   $('#current-turn').text('白のターン');
-    // }
   }
-
+  //現在のターン表示
   function dispCurrentTurn(){
     if(turn == 1){
       $('#current-turn').text('青のターン');
@@ -264,7 +257,6 @@ $(function(){
   //コマの裏返し処理
   function reverse(){
     var ry,rx,dy,dx;
-    var resVictory = 0;
 
     for(dy = -1; dy <= 1; dy++){
       for(dx = -1; dx <= 1; dx++){
@@ -286,11 +278,11 @@ $(function(){
               if(ban[ry][rx] == 1 || ban[ry][rx] == 4 || ban[ry][rx] == 7){
                 $('#cell-' + ry + '' + rx).text('○');
                 ban[ry][rx] += 1;
-                resVictory = judgVictory(ry, rx);
+                judgVictory(ry, rx);
               }else if(ban[ry][rx] == 2 || ban[ry][rx] == 5 || ban[ry][rx] == 8){
                 $('#cell-' + ry + '' + rx).text('●');
                 ban[ry][rx] -= 1;
-                resVictory = judgVictory(ry, rx);
+                judgVictory(ry, rx);
               }
               ry -= dy;
               rx -= dx;
@@ -311,63 +303,78 @@ $(function(){
     var y = 0;
     var x = 0;
     var cnt = 0;
+    var marker = 1;
 
     //縦軸を調べる
     for(y = 1; y <= 5; y++){
       if(turn == 1){
         if(ban[y][rx] == 1 || ban[y][rx] == 4 || ban[y][rx] == 7){
-          cnt++;
+          if(y - marker <= 1){
+            cnt++;
+            marker = y;
+          }
         }
       }else{
         if(ban[y][rx] == 2 || ban[y][rx] == 5 || ban[y][rx] == 8){
-          cnt++;
+          if(y - marker <= 1){
+            cnt++;
+            marker = y;
+          }
         }
       }
     }
     judgCnt(cnt);
     cnt = 0;
+    marker = 1;
 
     //横軸を調べる
-    for(x = 0; x <= 5; x++){
+    for(x = 1; x <= 5; x++){
       if(turn == 1){
         if(ban[ry][x] == 1 || ban[ry][x] == 4 || ban[ry][x] == 7){
-          cnt++;
+          if(x - marker <= 1){
+            cnt++;
+            marker = x;
+          }
         }
       }else{
         if(ban[ry][x] == 2 || ban[ry][x] == 5 || ban[ry][x] == 8){
-          cnt++;
+          if(x - marker <= 1){
+            cnt++;
+            marker = x;
+          }
         }
       }
     }
     judgCnt(cnt);
-    cnt = 0;
 
     //斜めを調べる
-    judgCnt(naname(1, 2, 1, 1, 4));
-    cnt = 0;
-    judgCnt(naname(1, 1, 1, 1, 5));
-    cnt = 0;
-    judgCnt(naname(2, 1, 1, 1, 4));
-    cnt = 0;
-    judgCnt(naname(1, 4, 1, -1, 4));
-    cnt = 0;
-    judgCnt(naname(1, 5, 1, -1, 5));
-    cnt = 0;
-    judgCnt(naname(2, 5, 1, -1, 4));
+    judgCnt(naname(1, 2, 1, 1, 4));       //右下
+    judgCnt(naname(1, 1, 1, 1, 5));       //右下
+    judgCnt(naname(2, 1, 1, 1, 4));       //右下
+    judgCnt(naname(1, 4, 1, -1, 4));      //左下
+    judgCnt(naname(1, 5, 1, -1, 5));      //左下
+    judgCnt(naname(2, 5, 1, -1, 4));      //左下
   }
 
   function naname(ry, rx, addy, addx, kaisu){
     var i;
     var cnt = 0;
+    var marker = 0;
 
     for(i = 0; i < kaisu; i++){
       if(turn == 1){
         if(ban[ry][rx] == 1 || ban[ry][rx] == 4 || ban[ry][rx] == 7){
-          cnt++;
+          if(i - marker <= 1){
+            cnt++;
+            marker = i;
+          }
         }
       }else{
         if(ban[ry][rx] == 2 || ban[ry][rx] == 5 || ban[ry][rx] == 8){
-          cnt++;
+          if(i - marker <= 1){
+            cnt++;
+            marker = i;
+          }
         }
       }
       ry += addy;
@@ -377,7 +384,6 @@ $(function(){
   }
 
   function judgCnt(cnt){
-
     if(victoryFlg != 0 && victoryFlg != turn){
       return false;
     }
@@ -435,9 +441,6 @@ $(function(){
     })
     //リクエスト成功
     .done(function(data){
-      //alert('done');
-      console.log(data);
-
       turn = data.turn;
       blueStock = data.blueStock;
       whiteStock = data.whiteStock;
@@ -471,9 +474,8 @@ $(function(){
     })
     //リクエスト結果に関係なく通るロジック
     .always(function(){
-      //alert('always');
+      return false;
     });
-    return false;
   });
 
   //ゲームを新しくはじめるためデータを初期化する
