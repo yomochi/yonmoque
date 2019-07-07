@@ -58,6 +58,7 @@ $(function(){
     if(victoryFlg != 0){
       gameEnd();
     }
+    requestBoard();
   });
 
   //ターンの処理
@@ -103,7 +104,8 @@ $(function(){
         }else if($(_this).text() == ''){
           if(blueStock > 0){
             $(_this).text('●');
-            stockCalc(--blueStock);
+            --blueStock;
+            stockCalc();
             putBan();
             judgVictory(row, col);
             if(victoryFlg == 0){
@@ -149,7 +151,8 @@ $(function(){
         }else if($(_this).text() == ''){
           if(whiteStock > 0){
             $(_this).text('○');
-            stockCalc(--whiteStock);
+            --whiteStock;
+            stockCalc();
             putBan();
             judgVictory(row, col);
             if(victoryFlg == 0){
@@ -165,6 +168,15 @@ $(function(){
   function turnChange(){
     $('#msg').text('');
     turn = 3 - turn;
+    dispCurrentTurn();
+    // if(turn == 1){
+    //   $('#current-turn').text('青のターン');
+    // }else{
+    //   $('#current-turn').text('白のターン');
+    // }
+  }
+
+  function dispCurrentTurn(){
     if(turn == 1){
       $('#current-turn').text('青のターン');
     }else{
@@ -173,22 +185,21 @@ $(function(){
   }
 
   //ストック計算
-  function stockCalc(stock){
-    var dispStock = "";
+  function stockCalc(){
+    var dispBlueStock = "";
+    var dispWhiteStock = "";
 
-    for(var i=0; i < stock; i++){
-      if(turn == 1){
-        dispStock += "●";
-      }else{
-        dispStock += "○";
-      }
+    for(var i=0; i < blueStock; i++){
+      dispBlueStock += "●";
     }
 
-    if(turn == 1){
-      $('#blue-piece').text(dispStock);
-    }else{
-      $('#white-piece').text(dispStock);
+    $('#blue-piece').text(dispBlueStock);
+
+    for(var i=0; i < whiteStock; i++){
+      dispWhiteStock += "○";
     }
+
+    $('#white-piece').text(dispWhiteStock);
   }
 
   //盤面にコマを置く
@@ -396,20 +407,108 @@ $(function(){
     }
   }
 
-  var jsonData ={
-    "board":{
-      situation:88,
-      turn:2,
-      blueStock:2,
-      whiteStock:2,
-      victory:0
+  function requestBoard(){
+    var jsonData ={
+      board:{
+        situation: ban.toString(),
+        turn: turn,
+        blueStock: blueStock,
+        whiteStock: whiteStock,
+        victory: victoryFlg
+      }
     }
-   }
 
-  $.ajax({
-    url: "/boards/1",
-    type: "PATCH",
-    dataType   : 'json',
-    data: jsonData
+    $.ajax({
+      url: "/boards/1",
+      type: "PATCH",
+      dataType   : 'json',
+      data: jsonData
+    });
+  }
+
+  //GETリクエストでDBからJSON形式で値を取得する
+  $('#get-json').click(function(){
+    $.ajax({
+      url: "/boards/1",
+      type: "GET",
+      dataType   : 'json'
+    })
+    //リクエスト成功
+    .done(function(data){
+      //alert('done');
+      console.log(data);
+
+      turn = data.turn;
+      blueStock = data.blueStock;
+      whiteStock = data.whiteStock;
+      victoryFlg = data.victory;
+      stockCalc();          //ストック計算
+      dispCurrentTurn();    //現在のターン表示
+
+      i = 0;
+      for(y = 0; y < 7; y++){
+        for(x = 0; x < 7; x++){
+          ban[y][x] = Number(data.situation[i]);
+          i += 2;
+        }
+      }
+
+      for(y = 1; y <= 5; y++){
+        for(x = 1; x <= 5; x++){
+          if(ban[y][x] == 1 || ban[y][x] == 4 || ban[y][x] == 7){
+            $('#cell-' + y + '' + x).text('●');
+          }else if(ban[y][x] == 2 || ban[y][x] == 5 || ban[y][x] == 8){
+            $('#cell-' + y + '' + x).text('○');
+          }else{
+            $('#cell-' + y + '' + x).text('');
+          }
+        }
+      }
+    })
+    //リクエスト失敗
+    .fail(function(){
+      alert('fail');
+    })
+    //リクエスト結果に関係なく通るロジック
+    .always(function(){
+      //alert('always');
+    });
+    return false;
+  });
+
+  //ゲームを新しくはじめるためデータを初期化する
+  $('#NewGame').click(function(){
+    turn = 1;             //ターンを表すフラグ 1:先攻 2:後攻
+    moveFlg = false;      //コマの移動中かどうかを表すフラグ
+    movePointId = "";     //移動元のID
+    blueStock = 6;        //青のコマ数
+    whiteStock = 6;       //白のコマ数
+    row = 0;              //クリックしたテーブルの縦座標Y
+    col = 0;              //クリックしたテーブルの横座標X
+    rowBk = 0;            //Y座標のバックアップ
+    colBk = 0;            //X座標のバックアップ
+    victoryFlg = 0;       //勝利判定 0:なし　1:青の勝ち　2:白の勝ち
+
+    ban = [
+      [9,9,9,9,9,9,9],
+      [9,0,3,6,3,0,9],
+      [9,3,6,3,6,3,9],
+      [9,6,3,0,3,6,9],
+      [9,3,6,3,6,3,9],
+      [9,0,3,6,3,0,9],
+      [9,9,9,9,9,9,9]
+    ];
+
+    for(y = 1; y <= 5; y++){
+      for(x = 1; x <= 5; x++){
+        $('#cell-' + y + '' + x).text('');
+      }
+    }
+
+    stockCalc();
+
+    //メッセージの初期化
+    $('#msg').text('');
+    $('#current-turn').text('青のターン');
   });
 });

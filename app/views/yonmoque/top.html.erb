@@ -1,6 +1,9 @@
-<div>
-  <h1>yonmoque.</h1><span id="current-turn">青のターン</span><span id="msg"></span>
-</div>
+<h3>yonmoque.
+<input id="get-json" type="submit" value="json取得">
+<input id="NewGame" type="submit" value="ゲームをはじめる">
+<div><span id="current-turn">青のターン</span><span id="msg"></span></div>
+</h3>
+
 <center>
 <div id="white-piece">○○○○○○ </div>
 <table>
@@ -57,3 +60,10 @@
 <br />
 <div id="blue-piece">●●●●●●</div>
 </center>
+<script>
+  var f = function(){
+    $.ajax({type: 'GET', url: '/boards/1'});
+  };
+  setTimeout(f, 1000);
+  f();
+</script>
