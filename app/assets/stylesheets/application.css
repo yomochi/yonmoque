@@ -14,18 +14,21 @@
  *= require_self
  */
 
-/*
- table {
+
+table {
   border: solid 1px #000;
   background-color: #000;
 }
-*/
+
 
 #x-point {
   border: none;
   width: 40px;
   height: 40px;
   text-align: center;
+/*  display: none;
+  visibility : hidden;
+  */
 }
 
 table td, table tr {
@@ -76,4 +79,20 @@ table td {
 
 #white-piece, #blue-piece {
   font-size: 300%;
+}
+
+.box1, .box2, .box3 {
+  float:left;
+  border: solid 1px black;
+  width: 33%;
+  height:600px;
+}
+
+.boxA {
+  border: none;
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 }

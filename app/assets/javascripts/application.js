@@ -64,9 +64,9 @@ $(function(){
   //ターンの処理
   function turnAction(_this){
     //クリックされた場所を記録する
-    row = $(_this).closest('tr').index();    //縦
-    col = _this.cellIndex;                   //横
-
+    row = $(_this).closest('tr').index() + 1;    //縦
+    col = _this.cellIndex + 1;                   //横
+console.log('row:' + row + ' col:' + col);
     //先攻のターン
     if(turn == 1){
       //コマの移動中
