@@ -21,6 +21,8 @@ Style/ExpandPathArguments:
   Exclude:
     - 'bin/rails'
     - 'bin/rake'
+    - 'spec/rails_helper.rb'
+
 
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
@@ -54,6 +56,7 @@ Style/StringLiterals:
     - 'config/puma.rb'
     - 'test/application_system_test_case.rb'
     - 'db/schema.rb'
+    - 'spec/rails_helper.rb'
 
 # Cop supports --auto-correct.
 # Configuration parameters: MinSize.
@@ -79,3 +82,10 @@ Layout/EmptyLinesAroundBlockBody:
 Style/NumericLiterals:
   Exclude:
     - 'db/schema.rb'
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/BlockComments:
+  Exclude:
+    - 'spec/spec_helper.rb'

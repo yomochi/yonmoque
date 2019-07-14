@@ -1,59 +1,70 @@
-<div>
-  <h1>yonmoque.</h1><span id="current-turn">青のターン</span><span id="msg"></span>
-</div>
+<h3>yonmoque.
+<input id="get-json" type="submit" value="json取得">
+<input id="NewGame" type="submit" value="ゲームをはじめる">
+<div><span id="current-turn">青のターン</span><span id="msg"></span></div>
+</h3>
+
 <center>
-<div id="white-piece">○○○○○○ </div>
-<table>
-  <tbody>
-    <th>
-      <td id="x-point">a</td>
-      <td id="x-point">b</td>
-      <td id="x-point">c</td>
-      <td id="x-point">d</td>
-      <td id="x-point">e</td>
-    </th>
-    <tr>
-      <td id="x-point">1</td>
-      <td id="cell-11"></td>
-      <td id="cell-12"></td>
-      <td id="cell-13"></td>
-      <td id="cell-14"></td>
-      <td id="cell-15"></td>
-    </tr>
-    <tr>
-      <td id="x-point">2</td>
-      <td id="cell-21"></td>
-      <td id="cell-22"></td>
-      <td id="cell-23"></td>
-      <td id="cell-24"></td>
-      <td id="cell-25"></td>
-    </tr>
-    <tr>
-      <td id="x-point">3</td>
-      <td id="cell-31"></td>
-      <td id="cell-32"></td>
-      <td id="cell-33"></td>
-      <td id="cell-34"></td>
-      <td id="cell-35"></td>
-    </tr>
-    <tr>
-      <td id="x-point">4</td>
-      <td id="cell-41"></td>
-      <td id="cell-42"></td>
-      <td id="cell-43"></td>
-      <td id="cell-44"></td>
-      <td id="cell-45"></td>
-    </tr>
-    <tr>
-      <td id="x-point">5</td>
-      <td id="cell-51"></td>
-      <td id="cell-52"></td>
-      <td id="cell-53"></td>
-      <td id="cell-54"></td>
-      <td id="cell-55"></td>
-    </tr>
-  </tbody>
-</table>
-<br />
-<div id="blue-piece">●●●●●●</div>
+<div class="boxA">
+  <div class="box1">プレイヤー1</div>
+  <div class="box2">
+    <div id="white-piece">○○○○○○ </div>
+    <table>
+      <tbody>
+    <!--
+        <th>
+          <td id="x-point">a</td>
+          <td id="x-point">b</td>
+          <td id="x-point">c</td>
+          <td id="x-point">d</td>
+          <td id="x-point">e</td>
+        </th>
+    -->
+        <tr>
+<!--          <td id="x-point">1</td>-->
+          <td id="cell-11"></td>
+          <td id="cell-12"></td>
+          <td id="cell-13"></td>
+          <td id="cell-14"></td>
+          <td id="cell-15"></td>
+        </tr>
+        <tr>
+<!--          <td id="x-point">2</td>-->
+          <td id="cell-21"></td>
+          <td id="cell-22"></td>
+          <td id="cell-23"></td>
+          <td id="cell-24"></td>
+          <td id="cell-25"></td>
+        </tr>
+        <tr>
+<!--          <td id="x-point">3</td>-->
+          <td id="cell-31"></td>
+          <td id="cell-32"></td>
+          <td id="cell-33"></td>
+          <td id="cell-34"></td>
+          <td id="cell-35"></td>
+        </tr>
+        <tr>
+<!--          <td id="x-point">4</td>-->
+          <td id="cell-41"></td>
+          <td id="cell-42"></td>
+          <td id="cell-43"></td>
+          <td id="cell-44"></td>
+          <td id="cell-45"></td>
+        </tr>
+        <tr>
+<!--          <td id="x-point">5</td>-->
+          <td id="cell-51"></td>
+          <td id="cell-52"></td>
+          <td id="cell-53"></td>
+          <td id="cell-54"></td>
+          <td id="cell-55"></td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    <div id="blue-piece">●●●●●●</div>
+  </div>
+  <div class="box3">プレイヤー２</div>
+</div>
 </center>
