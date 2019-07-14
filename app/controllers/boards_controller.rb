@@ -26,7 +26,8 @@ class BoardsController < ApplicationController
   def destroy; end
 
   private
-  #require モデル　permitが許可するカラム
+
+  # require model permitが許可するカラム
   def board_params
     params.require(:board).permit(:situation, :turn, :blueStock, :whiteStock, :victory)
   end
