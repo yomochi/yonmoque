@@ -19,14 +19,7 @@ class BoardsController < ApplicationController
   end
 
   def update
-    board = Board.find(params[:id])
-
-    if board
-      board.update(board_params)
-    else
-      Board.create(board_params)
-    end
-
+    Board.find(params[:id]).update(board_params)
     head :no_content
   end
 
