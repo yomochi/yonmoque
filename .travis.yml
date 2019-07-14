@@ -1,0 +1,20 @@
+language: ruby
+services:
+  - postgresql
+bundler_args: "--without development --jobs=3"
+cache: bundler
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
+  - cp config/database.yml.travis config/database.yml
+script:
+  - bin/rails db:migrate RAILS_ENV=test
+  - bundle exec rspec
+notifications:
+  email: false
+deploy:
+  provider: heroku
+  api_key:
+    secure: FGwgryW3CWRJpsGvpV8nsrUNb66HctzxadxWUbLnfp1rTT8Lh4msNVRmMZAcYdzi+3DeKylZFdjQcAU10au8ML3pxGerXkUuR1BU9vMlssx4XUzZ/DTowvMu6lUEadsNA3r9WsRsMV11UzfLoTrjSnxtIztcxBJ3W8uv/ql/k/Z8B/SWOqLmCF93hK2rbO1mc6iD35SZxSsTpFslx0pjXxvIPBk+JfFKd8yGVCc4rgIhWIlziWoAYKsW0+KujbyWjAuU19MrkYXvA04Z/FqbvA4Ng9nPcCgRSZycTVg0a+ed9VKGCIl1sWyP/LayJjgvHL9DZMKOPx+BFBDUdFCjciTnAvSwclGW5vTtme5aANiBVU3OOhkTZucjpXebZ+HZF0EZixDoG2NcFXqgyAy987e4eUuvttmhQfz2Z6VzLTj+2jC9zVzHUczscuy0d8Jc1kDM4QydrrJJUMXg4Lgyk6KiS1wtAPt0AQGGI7MgL+GuBx/Gy5EFs0+pi+nG7z7AwwUC4vw1ajRfk7VxeuHYh6NzkubfMXaxZUL1pAHnhE74NUroeVLC3aMgYnIEZL3GjuV/c+KcyrxUpbWct1KHSEmVPvb33LHkKYnrf9QXtz7cXOF+Ca8u4/aXlMsHt56maZ9iUJtambjuSB9vNPBjk6TkMB01JL9bsCT/6y/wb24=
+  app: yonmoque
+  on:
+    branch: master
