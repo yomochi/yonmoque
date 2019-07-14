@@ -50,7 +50,11 @@ var ban = [
   [9,9,9,9,9,9,9]
 ];
 
+
+
 $(function(){
+  getBoardInfo();
+
   $('table td').click(function(){
     if(victoryFlg == 0){
       turnAction(this);
@@ -66,7 +70,7 @@ $(function(){
     //クリックされた場所を記録する
     row = $(_this).closest('tr').index() + 1;    //縦
     col = _this.cellIndex + 1;                   //横
-console.log('row:' + row + ' col:' + col);
+
     //先攻のターン
     if(turn == 1){
       //コマの移動中
@@ -432,8 +436,8 @@ console.log('row:' + row + ' col:' + col);
     });
   }
 
-  //GETリクエストでDBからJSON形式で値を取得する
-  $('#get-json').click(function(){
+  //ボード情報の取得
+  function getBoardInfo(){
     $.ajax({
       url: "/boards/1",
       type: "GET",
@@ -476,6 +480,11 @@ console.log('row:' + row + ' col:' + col);
     .always(function(){
       return false;
     });
+  }
+
+  //GETリクエストでDBからJSON形式で値を取得する
+  $('#get-json').click(function(){
+    getBoardInfo();
   });
 
   //ゲームを新しくはじめるためデータを初期化する
@@ -512,5 +521,7 @@ console.log('row:' + row + ' col:' + col);
     //メッセージの初期化
     $('#msg').text('');
     $('#current-turn').text('青のターン');
+
+    requestBoard();
   });
 });
