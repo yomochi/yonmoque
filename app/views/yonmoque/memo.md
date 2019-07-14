@@ -217,3 +217,6 @@ Markdown記法を覚えましょう！
 ```html
 <p>hello</p>
 ```
+
+
+    #params.require(table名).permit(:キー, :キー)
