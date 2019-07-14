@@ -1,23 +1,23 @@
-
+```shell
 bundle exec rails generate migration CreateBoards situation:stirng turn:integer blueStock:integer whiteStock:integer victory:integer
+```
 
-
-・railsガイドでマイグレーションのやりかたを参照
+- railsガイドでマイグレーションのやりかたを参照
 https://railsguides.jp/active_record_migrations.html#%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E3%82%92%E4%BD%9C%E6%88%90%E3%81%99%E3%82%8B
 
-・DBを作成する
-・一意とNULLを許さない場合は追加する。
+- DBを作成する
+- 一意とNULLを許さない場合は追加する。
 
-モデルをつくる
-
-
+- モデルをつくる
 
 
-RESTFULは下記の振る舞いがすべて対応している（ルーティング）
-・GET（取得）
-・POST（作成）
-・PATCH（PUT）（更新）
-・DELETE（削除）
+
+
+# RESTFULは下記の振る舞いがすべて対応している（ルーティング）
+- GET（取得）
+- POST（作成）
+- PATCH（PUT）（更新）
+- DELETE（削除）
 
 restfulなルーティングしよう
 show
@@ -204,3 +204,16 @@ irb(main):017:0> %i( small medium large )
 
 １つなにかしたらコミットみたいな
 コミットメッセージで２行以上になりそうであれば、それはいろいろやっているのでよくない
+
+
+
+20190714
+Markdown記法を覚えましょう！
+# 見出し
+- 箇条書き
+- [x] チェックボックス
+
+
+```html
+<p>hello</p>
+```
