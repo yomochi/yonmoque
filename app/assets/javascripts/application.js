@@ -417,6 +417,27 @@ $(function(){
     }
   }
 
+  function createBoard(){
+    initGame();
+
+    var jsonData ={
+      board:{
+        situation: ban.toString(),
+        turn: turn,
+        blueStock: blueStock,
+        whiteStock: whiteStock,
+        victory: victoryFlg
+      }
+    }
+
+    $.ajax({
+      url: "/boards",
+      type: "POST",
+      dataType   : 'json',
+      data: jsonData
+    });
+  }
+
   function requestBoard(){
     var jsonData ={
       board:{
@@ -474,7 +495,8 @@ $(function(){
     })
     //リクエスト失敗
     .fail(function(){
-      alert('fail');
+      alert('初期化します！！');
+      createBoard();
     })
     //リクエスト結果に関係なく通るロジック
     .always(function(){
@@ -487,8 +509,8 @@ $(function(){
     getBoardInfo();
   });
 
-  //ゲームを新しくはじめるためデータを初期化する
-  $('#NewGame').click(function(){
+  //ゲームの初期化
+  function initGame(){
     turn = 1;             //ターンを表すフラグ 1:先攻 2:後攻
     moveFlg = false;      //コマの移動中かどうかを表すフラグ
     movePointId = "";     //移動元のID
@@ -521,7 +543,10 @@ $(function(){
     //メッセージの初期化
     $('#msg').text('');
     $('#current-turn').text('青のターン');
-
+  }
+  //ゲームを新しくはじめるためデータを初期化する
+  $('#NewGame').click(function(){
+    initGame();
     requestBoard();
   });
 });
