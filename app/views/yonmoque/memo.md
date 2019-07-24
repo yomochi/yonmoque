@@ -209,3 +209,10 @@ irb(main):017:0> %i( small medium large )
 - テストが通ったらherokuに自動でデプロイされる。
 
 - 次回、WEBソケットについて
+
+- 下記のソースはロボコップで怒られる
+'''
+    create_table :rooms do |t|
+      t.timestamps
+    end
+'''
